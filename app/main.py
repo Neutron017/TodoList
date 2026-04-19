@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from app.db import engine
 from app.models import Base
-from app.routers import tasks, users
+from app.routers import tasks, users, tags
 
 app = FastAPI(title='Task API')
 
 app.include_router(tasks.router)
 app.include_router(users.router)
-
+app.include_router(tags.router)
 
 @app.on_event('startup')
 async def init_db():

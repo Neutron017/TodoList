@@ -7,7 +7,8 @@ from app import models, schemas
 async def get_tasks(
         db: AsyncSession,
         skip: int = 0,
-        limit: int = 100):
+        limit: int = 10
+):
     result = await db.execute(
         select(models.Task)
         .options(selectinload(models.Task.tags))
@@ -18,7 +19,8 @@ async def get_tasks(
 
 async def get_task(
         db: AsyncSession,
-        task_id: int):
+        task_id: int
+):
     result = await db.execute(
         select(models.Task)
         .options(selectinload(models.Task.tags))
@@ -26,9 +28,11 @@ async def get_task(
     )
     return result.scalar_one_or_none()
 
-async def create_task(db: AsyncSession,
-                      task: schemas.TaskCreate,
-                      user_id: int):
+async def create_task(
+        db: AsyncSession,
+        task: schemas.TaskCreate,
+        user_id: int
+):
     db_task = models.Task(
         user_id=user_id,
         name=task.name,
@@ -39,10 +43,9 @@ async def create_task(db: AsyncSession,
         tag = await db.execute(
             select(models.Tag).where(models.Tag.id.in_(task.tag_ids))
         )
-        db_task.task = tag.scalars().all()
+        db_task.tags = tag.scalars().all()
     db.add(db_task)
     await db.commit()
-    await db.refresh(db_task)
     await db.refresh(db_task, attribute_names=['tags'])
     return db_task
 
@@ -70,12 +73,4 @@ async def delete_task(db: AsyncSession,
         await db.delete(db_task)
         await db.commit()
     return db_task
-
-
-
-
-
-
-
-
 

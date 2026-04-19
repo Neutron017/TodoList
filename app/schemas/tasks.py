@@ -1,7 +1,8 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import List, Optional
-from .tags import Tag
+from .tags import Tags
+
 
 class TaskBase(BaseModel):
     name: str
@@ -21,5 +22,5 @@ class Task(TaskBase):
     id: int
     user_id: int
     created_at: datetime
-    tags: List[Tag] = []
+    tags: List[Tags] = []
     model_config = ConfigDict(from_attributes=True)
