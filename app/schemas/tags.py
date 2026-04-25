@@ -9,7 +9,7 @@ class TagsCreate(TagsBase):
     pass
 
 class TagsUpdate(BaseModel):
-    username: Optional[str] = None
+    name: Optional[str] = None
 
 class Tags(TagsBase):
     id: int
